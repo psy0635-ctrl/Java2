@@ -20,8 +20,8 @@ public class LAB_DecodeSecure {
 
                 for (int i = 0; i < line.length(); i++) {
                     int num = (int)line.charAt(i);
-                    num +=100;
-                    decode +=(char)num;
+                    num -= 100;
+                    decode += (char)num;
                 }
 
                 fw.write(decode + "\n");
