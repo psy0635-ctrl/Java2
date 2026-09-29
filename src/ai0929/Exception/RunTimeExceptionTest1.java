@@ -1,4 +1,4 @@
-package ai0929;
+package ai0929.Exception;
 
 public class RunTimeExceptionTest1 {
 

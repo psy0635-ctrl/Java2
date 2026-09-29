@@ -1,12 +1,9 @@
-package ai0929;
+package ai0929.Exception;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
-public class ThrowsTest2 {
-    public static void main(String[] args) throws IOException {
+public class ThrowsTest1 {
+    public static void main(String[] args) {
         try{
             BufferedReader br = new BufferedReader(new FileReader("myData1.txt"));
 
