@@ -10,10 +10,14 @@ import java.awt.event.ActionListener;
 
 public class MenuTest extends JFrame {
     JTextArea textArea = new JTextArea();
-    JFrame openFrame;
+    JFileChooser fileChooser = new JFileChooser();
+    JFrame frame;
 
     public MenuTest() {
-        add(textArea);
+        frame = this;
+        JScrollPane scrollPane = new JScrollPane(textArea,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        add(scrollPane);
 
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
