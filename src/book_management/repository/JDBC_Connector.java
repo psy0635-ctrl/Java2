@@ -1,32 +1,36 @@
 package book_management.repository;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
+/** 공유용 연결 설정: 개인 계정은 config/db.properties에 직접 입력한다. */
 public class JDBC_Connector {
-    private static final String DRIVER_PATH ="oracle.jdbc.driver.OracleDriver";
-    private static final String URL ="jdbc:oracle:thin:@//localhost:1521/xe";
-    private static final String USER_NAME ="C##AISOFT";
-    private static final String PASSWORD ="1234";
-    private static Connection con;
-    public static Connection getConnection(){
-
-        try{
-            // 1. JDBC DRIVER MEMORY LOADING
-            Class.forName(DRIVER_PATH);
-            System.out.println("JDBC Driver Class founded");
-            // 2. CONNECTION
-            con = DriverManager.getConnection(URL,USER_NAME,PASSWORD);
-            System.out.println("Connection succeeded");
-        }catch (ClassNotFoundException e) {
-            System.out.println("JDBC Driver Class Not Found");
-        } catch (SQLException e) {
-            System.out.println("Connection Failed");
+    public static Connection getConnection() throws SQLException {
+        Path configPath = Path.of(System.getProperty("book.db.config", "config/db.properties"));
+        Properties config = new Properties();
+        try (Reader reader = Files.newBufferedReader(configPath, StandardCharsets.UTF_8)) {
+            config.load(reader);
+        } catch (IOException e) {
+            throw new SQLException("config/db.properties를 만들고 실행 작업 폴더를 프로젝트 루트로 지정하세요.", e);
         }
-        return con;
-    }
-    public static void main(String[] args) {
-        getConnection();
+        String url = config.getProperty("db.url", "").trim();
+        String user = config.getProperty("db.user", "").trim();
+        String password = config.getProperty("db.password", "");
+        if (url.isEmpty() || user.isEmpty() || password.isEmpty()) {
+            throw new SQLException("db.url, db.user, db.password를 본인의 Oracle 접속 정보로 설정하세요.");
+        }
+        try {
+            Class.forName("oracle.jdbc.OracleDriver");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("lib/ojdbc11.jar를 프로젝트 라이브러리에 추가하세요.", e);
+        }
+        return DriverManager.getConnection(url, user, password);
     }
 }

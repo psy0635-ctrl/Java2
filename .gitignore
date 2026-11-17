@@ -1,6 +1,7 @@
 .idea/
 *.iml
 out/
+/config/db.properties
 
 ### VS Code ###
 .vscode/
